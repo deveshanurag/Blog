@@ -1,9 +1,9 @@
 const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 const userSchema = mongoose.Schema({
-  name: { type: String, require: true },
-  email: { type: String, require: true, unique: true },
-  password: { type: String, require: true },
+  name: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   role: { type: String, default: "user" },
 });
 
@@ -20,7 +20,7 @@ userSchema.pre("save", async function (next) {
     next(error);
   }
 });
-userSchema.method.comparePassword = async function (userPassword) {
+userSchema.methods.comparePassword = async function (userPassword) {
   return bcrypt.compare(userPassword, this.password);
 };
 const User = mongoose.model("users", userSchema);

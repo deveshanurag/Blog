@@ -7,4 +7,11 @@ const registerValidation = [
   }),
 ];
 
-module.exports = registerValidation;
+const loginValidation = [
+  body("email", "Please include a valid email").isEmail(),
+  body("password", "Password must be at least 6 characters").isLength({
+    min: 6,
+  }),
+];
+
+module.exports = { registerValidation, loginValidation };
