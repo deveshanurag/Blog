@@ -15,7 +15,7 @@ const createBlog = async (req, res) => {
     const newBlog = await Blog.create({
       title,
       content,
-      tags,
+      tags: tags ? tags.split(",") : [],
       category,
       author: req.user._id,
     });
@@ -164,4 +164,43 @@ const deleteBlog = async (req, res) => {
   }
 };
 
-module.exports = { createBlog, readBlog, getBlog, editBlog, deleteBlog };
+const searchBlog = async (req, res) => {
+  const { query, tags, category } = req.query;
+  console.log(query, tags, category);
+
+  let searchCriteria = {};
+
+  if (query) {
+    searchCriteria.$or = [
+      { title: { $regex: query, $options: "i" } },
+      { content: { $regex: query, $options: "i" } },
+    ];
+  }
+
+  if (tags) {
+    searchCriteria.tags = { $in: tags.split(",") }; // Match any of the tags
+  }
+
+  if (category) {
+    searchCriteria.category = category; // Match the category ID
+  }
+
+  try {
+    const blogs = await Blog.find(searchCriteria).populate(
+      "author",
+      "name email"
+    );
+    res.status(200).json(blogs);
+  } catch (error) {
+    res.status(500).json({ error: "Error searching blogs." });
+  }
+};
+
+module.exports = {
+  createBlog,
+  readBlog,
+  getBlog,
+  editBlog,
+  deleteBlog,
+  searchBlog,
+};
