@@ -8,7 +8,7 @@ const userRegister = async (req, res) => {
   if (!errors.isEmpty()) {
     return res.status(400).json({ errors: errors.array() });
   }
-  const { name, email, password } = req.body;
+  const { name, email, password, role } = req.body;
   if (!name || !email || !password) {
     res.status(400).send("Enter all input fields");
     return;
@@ -22,6 +22,7 @@ const userRegister = async (req, res) => {
     name,
     email,
     password,
+    role: role || undefined,
   });
   if (newUser) {
     res.status(201).send({
