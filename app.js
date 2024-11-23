@@ -4,6 +4,7 @@ const app = express();
 const connectDB = require("./config/db");
 const userRoutes = require("./routes/userRoutes");
 const blogRoutes = require("./routes/blogRoutes");
+const commentRoutes = require("./routes/commentRoutes");
 connectDB();
 
 app.use(express.json());
@@ -13,6 +14,7 @@ app.get("/", (req, res) => {
 
 app.use("/api/users", userRoutes);
 app.use("/api/blogs", blogRoutes);
+app.use("/api/comments", commentRoutes);
 
 app.listen(5000, () => {
   console.log(`Server is listening on the port no 5000`);
